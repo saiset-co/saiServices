@@ -23,7 +23,7 @@
     },
     "WebSocket": {
         "Token": "hv",
-        "Url": "http://sai-websocket:8820"
+        "Url": "http://sai-web-socket:8820"
     },
     "StartBlock": 1,
     "Geth": [
