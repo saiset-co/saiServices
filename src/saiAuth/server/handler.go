@@ -27,6 +27,10 @@ func (s Server) Auth(h HandlerRequest) interface{} {
 	return s.AuthManager.Auth(h.getInterface(), h.Token)
 }
 
+func (s Server) Password(h HandlerRequest) interface{} {
+	return s.AuthManager.Password(h.getInterface(), h.Token)
+}
+
 func (h HandlerRequest) getInterface() map[string]interface{} {
 	var r = new(map[string]interface{})
 	err := json.Unmarshal(h.Body, r)
