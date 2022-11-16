@@ -2,13 +2,13 @@
   common:
     socket:
       enabled: true
-      port: 8018
+      port: 8818
     http:
       enabled: true
-      port: 8080
+      port: 8804
     ws:
       enabled: true
-      port: 8019
+      port: 8819
     log_mode: "debug"
     token: "12345"
   specific:

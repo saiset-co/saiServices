@@ -6,9 +6,9 @@ COPY ./build /srv/
 RUN apt-get update && apt-get install wget -y
 
 RUN chmod +x sai-eth-interaction
-CMD ./sai-eth-indexer start
+CMD ./sai-eth-interaction start
 
 
-EXPOSE 8018
-EXPOSE 8080
-EXPOSE 8019
+EXPOSE 8818
+EXPOSE 8804
+EXPOSE 8819

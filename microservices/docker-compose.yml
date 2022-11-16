@@ -1,41 +1,31 @@
 version: '3'
 services:
 
-  sai-auth:
-    build:
-      context: ./saiAuth
-      dockerfile: Dockerfile
-    ports:
-      - "8888:8888"
-      - "8800:8800"
-      - "8803:8803"
-
-  sai-storage:
-    build:
-      context: ./saiStorage
-      dockerfile: Dockerfile
-    ports:
-      - "8801:8801"
-      - "8802:8802"
-
-  sai-contract-explorer:
-    build:
-      context: ./saiContractExplorer
-      dockerfile: Dockerfile
-    ports:
-      - "8817:8817"
-    volumes:
-      - ./saiContractExplorer/build/block.data:/srv/block.data
-      - ./saiContractExplorer/build/config.json:/srv/config.json
+#  sai-auth:
+#    build:
+#      context: ./saiAuth
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8888:8888"
+#      - "8800:8800"
+#      - "8803:8803"
+#
+#  sai-storage:
+#    build:
+#      context: ./saiStorage
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8801:8801"
+#      - "8802:8802"
   
   sai-eth-interaction:
     build:
       context: ./saiEthInteraction
       dockerfile: Dockerfile
     ports:
-      - "8018:8018"
-      - "8019:8019"
-      - "8080:8080"
+      - "8818:8018"
+      - "8819:8019"
+      - "8804:8804"
     volumes:
       - ./saiContractExplorer/build/block.data:/srv/block.data
       - ./saiContractExplorer/build/config.json:/srv/config.json
