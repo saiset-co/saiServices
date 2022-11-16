@@ -13,7 +13,9 @@ service:
 #	cd ./src/saiGNMonitor && go build -o ../../microservices/saiGNMonitor/build/sai-gn-monitor
 #	cd ./src/saiStorage && go mod tidy && go build -o ../../microservices/saiStorage/build/sai-storage
 	cd ./src/saiAuth && go mod tidy && go build -o ../../microservices/saiAuth/build/sai-auth
-#	cd ./src/saiContractExplorer && go mod tidy && go build -o ../../microservices/saiContractExplorer/build/sai-contract-explorer
+	cd ./src/saiContractExplorer && go mod tidy && go build -o ../../microservices/saiContractExplorer/build/sai-contract-explorer
+	cp ./src/saiEthInteraction/config.yml microservices/saiEthInteraction/build
+	cd ./src/saiEthInteraction/ && go build -o ../../microservices/saiEthInteraction/build/sai-eth-interactions
 #	cp ./src/saiEthManager/config/config.json ./microservices/saiEthManager/build/config.json
 #	cp ./src/saiGNMonitor/config/config.json ./microservices/saiGNMonitor/build/config.json
 #	cp ./src/saiStorage/config.json ./microservices/saiStorage/build/config.json

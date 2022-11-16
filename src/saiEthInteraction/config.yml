@@ -1,0 +1,16 @@
+  
+  common:
+    socket:
+      enabled: true
+      port: 8018
+    http:
+      enabled: true
+      port: 8080
+    ws:
+      enabled: true
+      port: 8019
+    log_mode: "debug"
+    token: "12345"
+  specific:
+    eth_server: "https://rpc.ankr.com/eth_goerli"
+    log_mode: "debug"
