@@ -391,6 +391,10 @@ func (am Manager) isAuthRequestWrong(r map[string]interface{}) bool {
 	return r["password"] == nil
 }
 
+func (am Manager) isPasswordRequestWrong(r map[string]interface{}) bool {
+	return r["password"] == nil || r["internal_id"] == nil
+}
+
 func (am Manager) isAccessRequestWrong(r map[string]interface{}) bool {
 	return r["collection"] == nil || r["method"] == nil
 }
@@ -628,6 +632,70 @@ func (am Manager) getAccessToken(t string) (*models.AccessToken, error) {
 	token := tokens[0]
 
 	return &token, nil
+}
+
+func (am Manager) Password(r map[string]interface{}, t string) interface{} {
+	if !am.Access(r, t).(bool) {
+		fmt.Println("Unauthorized request")
+		return false
+	}
+
+	if am.isPasswordRequestWrong(r) {
+		am.Logger.Error("Wrong password request : password or internal_id does not exists")
+		return false
+	}
+
+	var (
+		wrappedResult map[string]interface{}
+		users         []map[string]interface{}
+	)
+	
+	err, result := am.Database.Get("users", bson.M{"internal_id": r["internal_id"]}, bson.M{}, am.Config.Token)
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	jsonErr := json.Unmarshal(result, &wrappedResult)
+
+	if jsonErr != nil {
+		fmt.Println(string(result))
+		fmt.Println(jsonErr)
+		return false
+	}
+
+	usersMarshalled, err := json.Marshal(wrappedResult["result"])
+
+	if err != nil {
+		fmt.Println(string(usersMarshalled))
+		fmt.Println(err)
+		return false
+	}
+
+	jsonErr = json.Unmarshal(usersMarshalled, &users)
+
+	if jsonErr != nil {
+		fmt.Println(string(result))
+		fmt.Println(jsonErr)
+		return false
+	}
+
+	if len(users) == 0 {
+		fmt.Println("Missing user")
+		return false
+	}
+
+	filter := bson.M{"internal_id": r["internal_id"]}
+	update := bson.M{"password": am.createPass(r["password"].(string))}
+	updateErr, updateResult := am.Database.Update("users", filter, update, am.Config.Token)
+
+	if updateErr != nil {
+		fmt.Println(updateErr)
+		return false
+	}
+
+	return string(updateResult)
 }
 
 func (am Manager) Auth(r map[string]interface{}, t string) interface{} {
