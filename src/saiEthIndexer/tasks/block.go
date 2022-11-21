@@ -5,12 +5,14 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"math/big"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/adam-lavrik/go-imath/ix"
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/onrik/ethrpc"
 	"github.com/saiset-co/saiEthIndexer/config"
 	"github.com/saiset-co/saiEthIndexer/utils/saiStorageUtil"
@@ -29,6 +31,13 @@ type BlockManager struct {
 
 type Block struct {
 	ID int `json:"id"`
+}
+
+type LogTransfer struct {
+	Type   string
+	From   common.Address
+	To     common.Address
+	Tokens *big.Int
 }
 
 func NewBlockManager(c config.Configuration, logger *zap.Logger) *BlockManager {
@@ -100,9 +109,27 @@ func (bm *BlockManager) SetLastBlock(blk *Block) error {
 	return nil
 }
 
-func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction) {
+func (bm *BlockManager) HandleReceipts(receipt *ethrpc.TransactionReceipt, _abi abi.ABI) ([]ethrpc.Log, error) {
+	events := []ethrpc.Log{}
+	//logTransferSig := []byte("Transfer(address,address,uint256)")
+	//logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
+
+	for _, l := range receipt.Logs {
+		events = append(events, l)
+	}
+
+	return events, nil
+}
+
+func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts map[string]*ethrpc.TransactionReceipt) {
 	for j := 0; j < len(trs); j++ {
 		for i := 0; i < len(bm.config.EthContracts.Contracts); i++ {
+			status, _ := strconv.ParseBool(receipts[trs[j].Hash].Status[2:])
+
+			if bm.config.SkipFailedTransactions && !status {
+				continue
+			}
+
 			if strings.ToLower(trs[j].From) != strings.ToLower(bm.config.EthContracts.Contracts[i].Address) && strings.ToLower(trs[j].To) != strings.ToLower(bm.config.EthContracts.Contracts[i].Address) {
 				continue
 			}
@@ -130,13 +157,20 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction) {
 				continue
 			}
 
-			abi, err := abi.JSON(strings.NewReader(bm.config.EthContracts.Contracts[i].ABI))
+			_abi, err := abi.JSON(strings.NewReader(bm.config.EthContracts.Contracts[i].ABI))
 			if err != nil {
 				bm.logger.Error("block manager - handle transaction - parse abi from config", zap.String("address", bm.config.EthContracts.Contracts[i].Address), zap.Error(err))
 				continue
 			}
 
-			method, err := abi.MethodById(decodedSig)
+			events, trErr := bm.HandleReceipts(receipts[trs[j].Hash], _abi)
+
+			if trErr != nil {
+				bm.logger.Error("block manager - handle transaction events - UnpackIntoMap", zap.String("transaction hash", trs[j].Hash), zap.Error(trErr))
+				continue
+			}
+
+			method, err := _abi.MethodById(decodedSig)
 			if err != nil {
 				bm.logger.Error("block manager - handle transaction - MethodById", zap.String("transaction hash", trs[j].Hash), zap.Error(err))
 				continue
@@ -157,6 +191,8 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction) {
 				continue
 			}
 
+			data["Events"] = events
+			data["Status"] = status
 			data["Operation"] = method.Name
 			data["Input"] = decodedInput
 

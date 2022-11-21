@@ -17,15 +17,16 @@
 		}
 	},
 	"specific": {
-		"geth_server": "",
+		"geth_server": "https://rpc.ankr.com/polygon_mumbai",
 		"storage": {
-			"token": "",
-			"url": "",
+			"token": "12345",
+			"url": "http://sai-storage:8801",
 			"email": "",
 			"password": ""
 		},
 		"start_block": 0,
-		"operations": ["registerAddress","transferTo"],
+		"operations": [],
+		"skipFailedTransactions": true,
 		"sleep":20,
 		"websocket": {
 			"token": "hv",
