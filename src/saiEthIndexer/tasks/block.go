@@ -3,6 +3,7 @@ package tasks
 import (
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -37,7 +38,7 @@ type LogTransfer struct {
 	Type   string
 	From   common.Address
 	To     common.Address
-	Tokens *big.Int
+	Tokens big.Int
 }
 
 func NewBlockManager(c config.Configuration, logger *zap.Logger) *BlockManager {
@@ -109,13 +110,39 @@ func (bm *BlockManager) SetLastBlock(blk *Block) error {
 	return nil
 }
 
-func (bm *BlockManager) HandleReceipts(receipt *ethrpc.TransactionReceipt, _abi abi.ABI) ([]ethrpc.Log, error) {
-	events := []ethrpc.Log{}
-	//logTransferSig := []byte("Transfer(address,address,uint256)")
-	//logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
+func (bm *BlockManager) HandleReceipts(receipt *ethrpc.TransactionReceipt, _abi abi.ABI) ([]map[string]interface{}, error) {
+	var events []map[string]interface{}
 
 	for _, l := range receipt.Logs {
-		events = append(events, l)
+		id := common.HexToHash(l.Topics[0])
+		_event, eventErr := _abi.EventByID(id)
+		if eventErr != nil {
+			continue
+		}
+
+		data := map[string]interface{}{}
+		event := map[string]interface{}{}
+
+		d, _ := hex.DecodeString(l.Data[2:])
+		unpackErr := _event.Inputs.UnpackIntoMap(data, d)
+
+		if unpackErr != nil {
+			fmt.Println("can't unpack event:", unpackErr)
+			continue
+		}
+
+		for eventId, eventData := range _event.Inputs {
+			if eventData.Indexed {
+				data[eventData.Name] = l.Topics[eventId+1]
+			}
+		}
+
+		data["name"] = _event.Name
+
+		event["Data"] = data
+		event["Log"] = l
+
+		events = append(events, event)
 	}
 
 	return events, nil
@@ -144,6 +171,7 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 			}
 
 			data := bson.M{
+				"Number": trs[j].BlockNumber,
 				"Hash":   trs[j].Hash,
 				"From":   trs[j].From,
 				"To":     trs[j].To,
@@ -166,7 +194,7 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 			events, trErr := bm.HandleReceipts(receipts[trs[j].Hash], _abi)
 
 			if trErr != nil {
-				bm.logger.Error("block manager - handle transaction events - UnpackIntoMap", zap.String("transaction hash", trs[j].Hash), zap.Error(trErr))
+				bm.logger.Error("block manager - handle transaction events - HandleReceipts", zap.String("transaction hash", trs[j].Hash), zap.Error(trErr))
 				continue
 			}
 

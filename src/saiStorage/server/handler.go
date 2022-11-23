@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/webmakom-com/saiStorage/mongo"
@@ -91,8 +92,9 @@ func (s Server) save(client mongo.Client, w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	uuid := uuid.New()
-	request.Data["internal_id"] = uuid.String()
+	request.Data["internal_id"] = uuid.New().String()
+	request.Data["cr_time"] = time.Now().Unix()
+	request.Data["ch_time"] = time.Now().Unix()
 
 	mongoErr := client.Insert(request.Collection, request.Data)
 
@@ -118,6 +120,8 @@ func (s Server) update(client mongo.Client, w http.ResponseWriter, r *http.Reque
 		fmt.Printf("Wrong JSON: %v", decoderErr)
 		return
 	}
+
+	request.Data["ch_time"] = time.Now().Unix()
 
 	mongoErr := client.Update(request.Collection, request.Select, bson.M{"$set": request.Data})
 
