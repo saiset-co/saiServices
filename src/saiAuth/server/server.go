@@ -4,13 +4,15 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/webmakom-com/saiAuth/auth"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/webmakom-com/saiAuth/auth"
+	"go.uber.org/zap"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -39,11 +41,11 @@ var clients = make(map[string]*websocket.Conn)
 var broadcast = make(chan []byte)
 var upgrader = websocket.Upgrader{}
 
-func NewServer(c config.Configuration, w bool) Server {
+func NewServer(c config.Configuration, w bool, logger *zap.Logger) Server {
 	return Server{
 		Config:      c,
 		Websocket:   w,
-		AuthManager: auth.NewAuthManager(c),
+		AuthManager: auth.NewAuthManager(c, logger),
 	}
 }
 
@@ -78,7 +80,7 @@ func (s Server) Start() {
 
 	r.HandleFunc("/{any}", s.handleHttpConnections)
 
-	fmt.Println("Server has been started!")
+	fmt.Println("Server has been started v1.0")
 	httpErr := http.ListenAndServe(s.Config.HttpServer.Host+":"+s.Config.HttpServer.Port, nil)
 
 	if httpErr != nil {
@@ -199,17 +201,21 @@ func (s Server) handleHttpServerRequest(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	var token string
+
 	headers := r.Header
-	token, ok := headers["Token"]
+	tokenSlice, ok := headers["Token"]
 
 	if !ok {
-		return
+		token = ""
+	} else {
+		token = tokenSlice[0]
 	}
 
 	handlerMessage := HandlerRequest{
 		Method: strings.Trim(r.URL.Path, "/"),
 		Body:   bytes,
-		Token:  token[0],
+		Token:  token,
 	}
 
 	result := s.handleServerRequest(handlerMessage)
