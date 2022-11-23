@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/webmakom-com/saiStorage/mongo"
@@ -100,8 +101,9 @@ func (s Server) save(w http.ResponseWriter, r *http.Request, method string) {
 		}
 	}
 
-	uuid := uuid.New()
-	request.Data["internal_id"] = uuid.String()
+	request.Data["internal_id"] = uuid.New().String()
+	request.Data["cr_time"] = time.Now().Unix()
+	request.Data["ch_time"] = time.Now().Unix()
 
 	mongoErr := s.Client.Insert(request.Collection, request.Data)
 
@@ -127,6 +129,8 @@ func (s Server) update(w http.ResponseWriter, r *http.Request, method string) {
 		fmt.Printf("Wrong JSON: %v", decoderErr)
 		return
 	}
+
+	request.Data["ch_time"] = time.Now().Unix()
 
 	if s.Config.UsePermissionAuth {
 		err := s.checkPermissionRequest(r, request.Collection, method, request.Select)

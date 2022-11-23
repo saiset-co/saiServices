@@ -1,20 +1,12 @@
 {
 	"contracts": [
 		{
-			"name": "test1",
-			"server": "server1",
-			"abi": "abi1",
-			"address": "address1",
-			"private": "p1",
-			"gas_limit": 10
-		},
-		{
-			"name": "test3",
-			"server": "server2",
-			"abi": "abi2",
-			"address": "address2",
-			"private": "p2",
-			"gas_limit": 15
+			"name": "",
+			"server": "",
+			"abi": "",
+			"address": "",
+			"private": "",
+			"gas_limit": 0
 		}
 	]
 }

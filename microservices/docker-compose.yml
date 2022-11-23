@@ -17,7 +17,7 @@ services:
 #    ports:
 #      - "8801:8801"
 #      - "8802:8802"
-  
+
   sai-eth-interaction:
     build:
       context: ./saiEthInteraction
@@ -29,5 +29,5 @@ services:
     volumes:
       - ./saiContractExplorer/build/block.data:/srv/block.data
       - ./saiContractExplorer/build/config.json:/srv/config.json
-      
-  
+
+
