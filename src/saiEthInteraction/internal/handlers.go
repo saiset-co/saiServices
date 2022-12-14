@@ -9,14 +9,12 @@ import (
 	"reflect"
 	"strings"
 
-	"go.uber.org/zap"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/saiset-co/saiService"
-
 	"github.com/iamthe1whoknocks/saiEthInteraction/models"
+	"github.com/saiset-co/saiService"
+	"go.uber.org/zap"
 )
 
 const (
@@ -55,12 +53,11 @@ func (is *InternalService) NewHandler() saiService.Handler {
 				}
 
 				abiEl, err := abi.JSON(strings.NewReader(contract.ABI))
-
 				if err != nil {
 					log.Fatalf("Could not read ABI: %v", err)
 				}
 
-				ethURL, ok := Service.Context.GetConfig("specific.eth_server", "").(string)
+				ethURL := contract.Server
 				if !ok {
 					Service.Logger.Sugar().Fatalf("wrong type of eth_server value in config, type : %+v", reflect.TypeOf(Service.Context.GetConfig("specific.eth_server", "")))
 				}
@@ -79,6 +76,14 @@ func (is *InternalService) NewHandler() saiService.Handler {
 						arg = common.HexToAddress(v.Value.(string))
 					}
 
+					if v.Type == "uint256" {
+						arg, ok = new(big.Int).SetString(v.Value.(string), 10)
+						if !ok {
+							Service.Logger.Error("handlers - api - can't convert to bigInt")
+							return nil, errors.New("handlers - api - can't convert to bigInt")
+						}
+					}
+
 					if v.Type == "[]string" {
 						t := v.Value.([]interface{})
 						s := make([]string, len(t))
@@ -92,7 +97,12 @@ func (is *InternalService) NewHandler() saiService.Handler {
 					args = append(args, arg)
 				}
 
-				input, _ := abiEl.Pack(req.Method, args...)
+				input, err := abiEl.Pack(req.Method, args...)
+
+				if err != nil {
+					Service.Logger.Error("handlers - api - pack eth server", zap.Error(err))
+					return nil, err
+				}
 
 				response, err := Service.RawTransaction(ethClient, big.NewInt(0), input, contract)
 				if err != nil {

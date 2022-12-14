@@ -26,7 +26,7 @@ require (
 	github.com/ethereum/go-ethereum v1.10.26
 	github.com/kr/text v0.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/saiset-co/saiService v0.0.0-20221113180624-aa7ece3885e5
+	github.com/saiset-co/saiService v0.0.0-20221114154115-8e80f2c9a6a1
 	github.com/urfave/cli/v2 v2.11.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	go.uber.org/zap v1.23.0
