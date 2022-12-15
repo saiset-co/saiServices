@@ -12,6 +12,7 @@ type Parameter struct {
 type EthRequest struct {
 	Contract string       `json:"contract"`
 	Method   string       `json:"method"`
+	Value    string       `json:"value"`
 	Params   []*Parameter `json:"params"`
 }
 

@@ -23,20 +23,20 @@ log_mode: "debug" //Debug mode
 #### Contract command
 - request:
 
-curl --location --request GET 'http://localhost:8804/api' \
+curl --location --request GET 'http://localhost:8804' \
 &emsp;    --header 'Token: SomeToken' \
 &emsp;    --header 'Content-Type: application/json' \
-&emsp;    --data-raw '{"contract":"$name","method":"$contract_method_name", "params":[{"type":"$(int|string|float...)","value":"$some_value"}]}'
+&emsp;    --data-raw '{"method": "api", "data": {"contract":"$name","method":"$contract_method_name", "value": "$value", "params":[{"type":"$(int|string|float...)","value":"$some_value"}]}}'
 
 - response: {"tx_0123"} //transaction hash
 
 #### Add contracts
 - request:
 
-curl --location --request GET 'http://localhost:8804/add' \
+curl --location --request GET 'http://localhost:8804' \
 &emsp;    --header 'Token: SomeToken' \
 &emsp;    --header 'Content-Type: application/json' \
-&emsp;    --data-raw '[{"name":"$name","address":"$address","abi":"$abi", "private": "$private", "gas_limit":"$gas_limit"}]'
+&emsp;    --data-raw '{"method": "add", "data": {"contracts": [{"name":"$name", "server": "$server", "address":"$address","abi":"$abi", "private": "$private", "gas_limit":100}]}}'
 
 - response: {"ok"}
 
@@ -46,7 +46,7 @@ curl --location --request GET 'http://localhost:8804/add' \
 curl --location --request GET 'http://localhost:8804/delete' \
 &emsp;    --header 'Token: SomeToken' \
 &emsp;    --header 'Content-Type: application/json' \
-&emsp;    --data-raw '[{"name":"$name","address":"$address","abi":"$abi", "private": "$private", "gas_limit":"$gas_limit"}]'
+&emsp;    --data-raw '{"method": "delete", "data": {"names": ["$name"]}}'
 
 - response: {"ok"}
 

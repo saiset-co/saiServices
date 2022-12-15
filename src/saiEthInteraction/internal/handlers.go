@@ -104,7 +104,16 @@ func (is *InternalService) NewHandler() saiService.Handler {
 					return nil, err
 				}
 
-				response, err := Service.RawTransaction(ethClient, big.NewInt(0), input, contract)
+				value := big.NewInt(0)
+				if req.Value != "" {
+					value, ok = new(big.Int).SetString(req.Value, 10)
+					if !ok {
+						Service.Logger.Error("handlers - api - can't convert value to bigInt")
+						return nil, errors.New("handlers - api - can't convert value `to bigInt")
+					}
+				}
+
+				response, err := Service.RawTransaction(ethClient, value, input, contract)
 				if err != nil {
 					return nil, err
 				}
