@@ -36,7 +36,7 @@ curl --location --request GET 'http://localhost:8804' \
 curl --location --request GET 'http://localhost:8804' \
 &emsp;    --header 'Token: SomeToken' \
 &emsp;    --header 'Content-Type: application/json' \
-&emsp;    --data-raw '{"method": "add", "data": {"contracts": [{"name":"$name", "server": "$server", "address":"$address","abi":"[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"}]", "private": "$private", "gas_limit":100}]}}'
+&emsp;    --data-raw '{"method": "add", "data": {"contracts": [{"name":"$name", "server": "$server", "address":"$address","abi":"$abi", "private": "$private", "gas_limit":100}]}}'
 
 - response: {"ok"}
 
