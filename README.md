@@ -43,7 +43,7 @@ curl --location --request GET 'http://localhost:8804' \
 #### Delete contracts
 - request:
 
-curl --location --request GET 'http://localhost:8804/delete' \
+curl --location --request GET 'http://localhost:8804' \
 &emsp;    --header 'Token: SomeToken' \
 &emsp;    --header 'Content-Type: application/json' \
 &emsp;    --data-raw '{"method": "delete", "data": {"names": ["$name"]}}'
