@@ -144,6 +144,7 @@ func (s *Service) handleHttpConnections(resp http.ResponseWriter, req *http.Requ
 		err := j{"Status": "NOK", "Error": decoderErr.Error()}
 		errBody, _ := json.Marshal(err)
 		log.Println(err)
+		resp.WriteHeader(http.StatusBadRequest)
 		resp.Write(errBody)
 		return
 	}
@@ -152,6 +153,7 @@ func (s *Service) handleHttpConnections(resp http.ResponseWriter, req *http.Requ
 		err := j{"Status": "NOK", "Error": "Wrong message format"}
 		errBody, _ := json.Marshal(err)
 		log.Println(err)
+		resp.WriteHeader(http.StatusBadRequest)
 		resp.Write(errBody)
 		return
 	}
@@ -162,6 +164,7 @@ func (s *Service) handleHttpConnections(resp http.ResponseWriter, req *http.Requ
 		err := j{"Status": "NOK", "Error": resultErr.Error()}
 		errBody, _ := json.Marshal(err)
 		log.Println(err)
+		resp.WriteHeader(http.StatusBadRequest)
 		resp.Write(errBody)
 		return
 	}
@@ -172,10 +175,12 @@ func (s *Service) handleHttpConnections(resp http.ResponseWriter, req *http.Requ
 		err := j{"Status": "NOK", "Error": marshalErr.Error()}
 		errBody, _ := json.Marshal(err)
 		log.Println(err)
+		resp.WriteHeader(http.StatusBadRequest)
 		resp.Write(errBody)
 		return
 	}
 
+	resp.WriteHeader(http.StatusOK)
 	resp.Write(body)
 }
 
