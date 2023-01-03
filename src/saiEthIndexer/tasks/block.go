@@ -177,7 +177,7 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 				"Hash":   trs[j].Hash,
 				"From":   trs[j].From,
 				"To":     trs[j].To,
-				"Amount": trs[j].Value,
+				"Amount": trs[j].Value.Uint64(),
 			}
 
 			_abi, abiErr := abi.JSON(strings.NewReader(bm.config.EthContracts.Contracts[i].ABI))
