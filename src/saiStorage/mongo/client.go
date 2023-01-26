@@ -43,7 +43,7 @@ func NewMongoClient(config config.Configuration) (Client, error) {
 	case false:
 		{
 			host, _ = mongo.NewClient(options.Client().ApplyURI(
-				"mongodb://" + config.Storage.Host + ":" + config.Storage.Port + "/" + config.Storage.Database,
+				"mongodb://" + config.Storage.User + ":" + config.Storage.Pass + "@" + config.Storage.Host + "/" + config.Storage.Database,
 			))
 
 			hostErr = host.Connect(ctx)
