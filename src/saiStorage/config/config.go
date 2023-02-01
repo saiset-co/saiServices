@@ -37,7 +37,6 @@ type Configuration struct {
 		Address string
 		ABI     string
 	}
-	Geth              []string
 	Sleep             int
 	UsePermissionAuth bool
 	SaiAuth           struct {

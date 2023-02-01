@@ -1,0 +1,16 @@
+common:
+  socket:
+    port: 8009
+  http:
+    enabled: true
+    port: 8089
+  ws:
+    enabled: true
+    port: 8099
+service:
+  storage_from:
+    url: "http://3.141.166.138:8801"
+    token: "12345"
+  storage_to:
+    url: "http://localhost:8801"
+    token: "12345"

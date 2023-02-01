@@ -42,9 +42,17 @@ func NewMongoClient(config config.Configuration) (Client, error) {
 	switch config.Storage.Atlas {
 	case false:
 		{
-			host, _ = mongo.NewClient(options.Client().ApplyURI(
-				"mongodb://" + config.Storage.User + ":" + config.Storage.Pass + "@" + config.Storage.Host + "/" + config.Storage.Database,
-			))
+			if config.Storage.User != "" && config.Storage.Pass != "" {
+				fmt.Println("Use auth")
+				host, _ = mongo.NewClient(options.Client().ApplyURI(
+					"mongodb://" + config.Storage.User + ":" + config.Storage.Pass + "@" + config.Storage.Host + "/" + config.Storage.Database + "?retrywrites=false",
+				))
+			} else {
+				fmt.Println("No auth")
+				host, _ = mongo.NewClient(options.Client().ApplyURI(
+					"mongodb://" + config.Storage.Host + ":" + config.Storage.Port + "/" + config.Storage.Database,
+				))
+			}
 
 			hostErr = host.Connect(ctx)
 		}
