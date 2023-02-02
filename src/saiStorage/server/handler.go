@@ -101,9 +101,17 @@ func (s Server) save(w http.ResponseWriter, r *http.Request, method string) {
 		}
 	}
 
-	request.Data["internal_id"] = uuid.New().String()
-	request.Data["cr_time"] = time.Now().Unix()
-	request.Data["ch_time"] = time.Now().Unix()
+	if _, exists := request.Data["use exist"]; !exists {
+		request.Data["internal_id"] = uuid.New().String()
+	}
+
+	if _, exists := request.Data["cr_time"]; !exists {
+		request.Data["cr_time"] = time.Now().Unix()
+	}
+
+	if _, exists := request.Data["ch_time"]; !exists {
+		request.Data["ch_time"] = time.Now().Unix()
+	}
 
 	mongoErr := s.Client.Insert(request.Collection, request.Data)
 
