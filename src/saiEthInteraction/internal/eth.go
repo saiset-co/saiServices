@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"crypto/ecdsa"
+	"github.com/iamthe1whoknocks/saiEthInteraction/utils"
 	"math/big"
 	"sync"
 	"time"
@@ -16,7 +17,7 @@ import (
 )
 
 var mux sync.Mutex
-var nonceList = map[string]uint64{}
+var nonceList = map[string]map[uint64]bool{}
 
 func (is *InternalService) getNonce(client *ethclient.Client, contract *models.Contract, fromAddress common.Address) (uint64, error) {
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
@@ -25,13 +26,20 @@ func (is *InternalService) getNonce(client *ethclient.Client, contract *models.C
 	}
 
 	mux.Lock()
-	if prevNonce, ok := nonceList[contract.Address]; ok {
-		if prevNonce == nonce {
-			nonce += 10
+
+	if prevContractNonceList, ok := nonceList[contract.Address]; ok {
+		maxContractNonceUsed := utils.GetMaxKey(prevContractNonceList)
+		if nonce <= maxContractNonceUsed {
+			if len(prevContractNonceList) > 100 {
+				nonceList[contract.Address] = map[uint64]bool{}
+			}
+			nonce = maxContractNonceUsed + 10
 		}
+		nonceList[contract.Address][nonce] = true
+	} else {
+		nonceList[contract.Address] = map[uint64]bool{nonce: true}
 	}
 
-	nonceList[contract.Address] = nonce
 	mux.Unlock()
 
 	return nonce, nil
