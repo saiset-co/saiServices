@@ -3,7 +3,6 @@ package tasks
 import (
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -123,13 +122,13 @@ func (bm *BlockManager) HandleReceipts(receipt *ethrpc.TransactionReceipt, _abi 
 		data := map[string]interface{}{}
 		event := map[string]interface{}{}
 
-		d, _ := hex.DecodeString(l.Data[2:])
-		unpackErr := _event.Inputs.UnpackIntoMap(data, d)
-
-		if unpackErr != nil {
-			fmt.Println("can't unpack event:", unpackErr)
-			continue
-		}
+		//d, _ := hex.DecodeString(l.Data[2:])
+		//unpackErr := _event.Inputs.UnpackIntoMap(data, d)
+		//
+		//if unpackErr != nil {
+		//	fmt.Println("can't unpack event:", unpackErr)
+		//	continue
+		//}
 
 		for eventId, eventData := range _event.Inputs {
 			if eventData.Indexed {
@@ -173,11 +172,12 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 			}
 
 			data := bson.M{
-				"Number": trs[j].BlockNumber,
-				"Hash":   trs[j].Hash,
-				"From":   trs[j].From,
-				"To":     trs[j].To,
-				"Amount": trs[j].Value,
+				"Number":  trs[j].BlockNumber,
+				"Hash":    trs[j].Hash,
+				"From":    trs[j].From,
+				"To":      trs[j].To,
+				"Amount":  trs[j].Value,
+				"AmountS": trs[j].Value.String(),
 			}
 
 			_abi, abiErr := abi.JSON(strings.NewReader(bm.config.EthContracts.Contracts[i].ABI))
