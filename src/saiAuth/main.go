@@ -45,7 +45,7 @@ func main() {
 	//server for metrics
 	mr := gin.Default()
 	pprof.Register(mr)
-	go mr.Run()
+	go mr.Run(":8081")
 	//
 
 	//srv.StartHttps()
