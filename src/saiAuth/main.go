@@ -51,16 +51,3 @@ func main() {
 	//srv.StartHttps()
 	srv.Start()
 }
-
-type Monitor struct {
-	Alloc,
-	TotalAlloc,
-	Sys,
-	Mallocs,
-	Frees,
-	LiveObjects,
-	PauseTotalNs uint64
-
-	NumGC        uint32
-	NumGoroutine int
-}
