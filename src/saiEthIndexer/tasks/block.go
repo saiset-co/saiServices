@@ -153,7 +153,13 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 		for i := 0; i < len(bm.config.EthContracts.Contracts); i++ {
 			methodName := "Unknown"
 			decodedInput := map[string]interface{}{}
-			status, _ := strconv.ParseBool(receipts[trs[j].Hash].Status[2:])
+			status := false
+
+			if len(receipts[trs[j].Hash].Status) > 2 {
+				status, _ = strconv.ParseBool(receipts[trs[j].Hash].Status[2:])
+			} else if len(receipts[trs[j].Hash].Root) > 2 {
+				status = true
+			}
 
 			if bm.config.SkipFailedTransactions && !status {
 				continue
@@ -192,8 +198,9 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 				continue
 			}
 
+			decodedInput = map[string]interface{}{}
+
 			if len(trs[j].Input) >= 10 {
-				decodedInput = map[string]interface{}{}
 				decodedSig, decSigErr := hex.DecodeString(trs[j].Input[2:10])
 				if decSigErr != nil {
 					bm.logger.Error("block manager - handle transaction - decode transaction function identifier", zap.String("transaction hash", trs[j].Hash), zap.Error(decSigErr))

@@ -3,7 +3,8 @@ package internal
 import (
 	"context"
 	"crypto/ecdsa"
-	"github.com/iamthe1whoknocks/saiEthInteraction/utils"
+	"encoding/json"
+	"errors"
 	"math/big"
 	"sync"
 	"time"
@@ -19,30 +20,22 @@ import (
 var mux sync.Mutex
 var nonceList = map[string]map[uint64]bool{}
 
-func (is *InternalService) getNonce(client *ethclient.Client, contract *models.Contract, fromAddress common.Address) (uint64, error) {
-	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
-	if err != nil {
-		return 0, err
+type resTX struct {
+	Transaction *types.Transaction
+	Status      string `json:"status"`
+	Result      string `json:"result"`
+}
+
+func response(tx *types.Transaction, res string) (resTX, error) {
+	result := resTX{
+		Transaction: tx,
+		Status:      "error",
+		Result:      res,
 	}
+	resultS, _ := json.Marshal(result)
+	err := errors.New(string(resultS))
 
-	mux.Lock()
-
-	if prevContractNonceList, ok := nonceList[contract.Address]; ok {
-		maxContractNonceUsed := utils.GetMaxKey(prevContractNonceList)
-		if nonce <= maxContractNonceUsed {
-			if len(prevContractNonceList) > 100 {
-				nonceList[contract.Address] = map[uint64]bool{}
-			}
-			nonce = maxContractNonceUsed + 10
-		}
-		nonceList[contract.Address][nonce] = true
-	} else {
-		nonceList[contract.Address] = map[uint64]bool{nonce: true}
-	}
-
-	mux.Unlock()
-
-	return nonce, nil
+	return result, err
 }
 
 func (is *InternalService) RawTransaction(client *ethclient.Client, value *big.Int, data []byte, contract *models.Contract) (string, error) {
@@ -64,9 +57,8 @@ func (is *InternalService) RawTransaction(client *ethclient.Client, value *big.I
 	}
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
-	nonce, err := is.getNonce(client, contract, fromAddress)
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
-		is.Logger.Error("handlers - api - RawTransaction - get nonce", zap.Error(err))
 		return "", err
 	}
 
@@ -91,21 +83,51 @@ func (is *InternalService) RawTransaction(client *ethclient.Client, value *big.I
 
 	chainID, err := client.NetworkID(context.Background())
 	if err != nil {
-		is.Logger.Error("handlers - api - RawTransaction - get networkID", zap.Error(err))
+		res, err := response(tx, err.Error())
+		is.Logger.Error("handlers - api - RawTransaction - get networkID", zap.Any("TX", res))
 		return "", err
 	}
 
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
 	if err != nil {
-		is.Logger.Error("handlers - api - RawTransaction - signTx", zap.Error(err))
+		res, err := response(tx, err.Error())
+		is.Logger.Error("handlers - api - RawTransaction - signTx", zap.Any("TX", res))
 		return "", err
 	}
 
+	mux.Lock()
 	err = client.SendTransaction(ctx, signedTx)
 	if err != nil {
-		is.Logger.Error("handlers - api - RawTransaction - sendTx", zap.Error(err))
+		res, err := response(tx, err.Error())
+		is.Logger.Error("handlers - api - RawTransaction - sendTx", zap.Any("TX", res))
 		return "", err
 	}
 
-	return signedTx.Hash().String(), nil
+	res, _ := response(tx, signedTx.Hash().String())
+	resS, _ := json.Marshal(res)
+
+	for {
+		resTx, isPending, err := client.TransactionByHash(ctx, signedTx.Hash())
+		if err != nil {
+			res, err := response(tx, err.Error())
+			is.Logger.Error("handlers - api - RawTransaction - sendTx", zap.Any("TX", res))
+			return "", err
+		}
+
+		if resTx == nil {
+			is.Logger.Debug("handlers - api - RawTransaction - sendTx - tx was not created", zap.Any("TX", res))
+			mux.Unlock()
+			goto done
+		} else if resTx != nil && !isPending {
+			is.Logger.Debug("handlers - api - RawTransaction - sendTx - tx done", zap.Any("TX", res))
+			mux.Unlock()
+			goto done
+		}
+
+		is.Logger.Debug("handlers - api - RawTransaction - sendTx - pending, sleep 2 sec")
+		time.Sleep(2 * time.Second)
+	}
+
+done:
+	return string(resS), nil
 }

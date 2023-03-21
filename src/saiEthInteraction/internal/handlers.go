@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/big"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -72,8 +73,35 @@ func (is *InternalService) NewHandler() saiService.Handler {
 				for _, v := range req.Params {
 					arg := v.Value
 
+					switch arg.(type) {
+					case float64:
+						Service.Logger.Error("handlers - api - wrong value format, please use strings always: 'value': '1'")
+						return nil, errors.New("handlers - api - wrong value format, please use strings always: 'value': '1'")
+					case []float64:
+						Service.Logger.Error("handlers - api - wrong value format, please use strings always: 'value': ['1']")
+						return nil, errors.New("handlers - api - wrong value format, please use strings always: 'value': ['1']")
+					}
+
 					if v.Type == "address" {
 						arg = common.HexToAddress(v.Value.(string))
+					}
+
+					if v.Type == "uint16" {
+						num, err := strconv.ParseUint(v.Value.(string), 10, 16)
+						if err != nil {
+							Service.Logger.Error("handlers - api - can't convert to uint16")
+							return nil, errors.New("handlers - api - can't convert to uint16")
+						}
+						arg = uint16(num)
+					}
+
+					if v.Type == "uint8" {
+						num, err := strconv.ParseUint(v.Value.(string), 10, 8)
+						if err != nil {
+							Service.Logger.Error("handlers - api - can't convert to uint8")
+							return nil, errors.New("handlers - api - can't convert to uint8")
+						}
+						arg = uint8(num)
 					}
 
 					if v.Type == "uint256" {
@@ -84,17 +112,68 @@ func (is *InternalService) NewHandler() saiService.Handler {
 						}
 					}
 
-					if v.Type == "[]string" {
+					if v.Type == "address[]" {
+						t := v.Value.([]interface{})
+						s := make([]common.Address, len(t))
+						for i, a := range t {
+							s[i] = common.HexToAddress(a.(string))
+						}
+						arg = s
+					}
+
+					if v.Type == "string[]" {
 						t := v.Value.([]interface{})
 						s := make([]string, len(t))
 						for i, a := range t {
 							s[i] = fmt.Sprint(a)
 						}
+						arg = s
+					}
 
+					if v.Type == "uint256[]" {
+						t := v.Value.([]interface{})
+						s := make([]*big.Int, len(t))
+						for i, a := range t {
+							s[i], ok = new(big.Int).SetString(a.(string), 10)
+							if !ok {
+								Service.Logger.Error("handlers - api - can't convert to bigInt uint256[]")
+								return nil, errors.New("handlers - api - can't convert to bigInt uint256[]")
+							}
+						}
+						arg = s
+					}
+
+					if v.Type == "uint16[]" {
+						t := v.Value.([]interface{})
+						s := make([]uint16, len(t))
+						for i, a := range t {
+							num, err := strconv.ParseUint(a.(string), 10, 16)
+							if err != nil {
+								Service.Logger.Error("handlers - api - can't convert to uint16 uint16[]")
+								return nil, errors.New("handlers - api - can't convert to uint16 uint16[]")
+							}
+							s[i] = uint16(num)
+						}
+						arg = s
+					}
+
+					if v.Type == "uint8[]" {
+						t := v.Value.([]interface{})
+						s := make([]uint8, len(t))
+						for i, a := range t {
+							num, err := strconv.ParseUint(a.(string), 10, 8)
+							if err != nil {
+								Service.Logger.Error("handlers - api - can't convert to uint8 uint8[]")
+								return nil, errors.New("handlers - api - can't convert to uint8 uint8[]")
+							}
+							s[i] = uint8(num)
+						}
 						arg = s
 					}
 
 					args = append(args, arg)
+
+					Service.Logger.Info("handlers - api", zap.Any("args", args))
 				}
 
 				input, err := abiEl.Pack(req.Method, args...)
