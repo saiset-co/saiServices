@@ -8,8 +8,10 @@ import (
 
 type Configuration struct {
 	HttpServer struct {
-		Host string
-		Port int
+		Host            string
+		Port            int
+		EnableProfiling bool
+		ProfilingPort   int64
 	}
 	GlassNode struct {
 		Url      string

@@ -44,7 +44,9 @@ type Configuration struct {
 			Addresses []string
 		}
 	}
-	Sleep int
+	Sleep           int
+	EnableProfiling bool
+	ProfilingPort   int64
 }
 
 func Load() Configuration {

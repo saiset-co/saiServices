@@ -8,9 +8,11 @@ import (
 
 type Configuration struct {
 	HttpServer struct {
-		Host  string
-		Port  int
-		Token string
+		Host            string
+		Port            int
+		Token           string
+		EnableProfiling bool
+		ProfilingPort   int64
 	}
 	Contract struct {
 		Server   string

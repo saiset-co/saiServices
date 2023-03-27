@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/tkanos/gonfig"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/gin"
+	"github.com/tkanos/gonfig"
 )
 
 type configuration struct {
@@ -26,6 +29,8 @@ type configuration struct {
 			Password string
 		}
 	}
+	EnableProfiling bool
+	ProfilingPort   int64
 }
 
 type GraphAnswerType struct {
@@ -59,13 +64,13 @@ type PairType struct {
 }
 
 type MessageDataType struct {
-	Pair    string `json:"pair"`
-	Market  string `json:"market"`
+	Pair    string            `json:"pair"`
+	Market  string            `json:"market"`
 	Amounts map[string]string `json:"amounts"`
 }
 
 type MessageType struct {
-	Type string `json:"type"`
+	Type string            `json:"type"`
 	Data []MessageDataType `json:"data"`
 }
 
@@ -78,6 +83,12 @@ func main() {
 	if configErr != nil {
 		fmt.Println("Config missed!! ")
 		panic(configErr)
+	}
+
+	if config.EnableProfiling {
+		mr := gin.Default()
+		pprof.Register(mr)
+		go mr.Run(fmt.Sprintf(":%d", config.ProfilingPort))
 	}
 
 	go process()
@@ -102,7 +113,7 @@ func formatMessage(answer GraphAnswerType) MessageType {
 			pair.Token1.Symbol: pair.Reserve1,
 		}
 
-		data := MessageDataType {
+		data := MessageDataType{
 			pair.Token0.Symbol + "/" + pair.Token1.Symbol,
 			"uniswap",
 			amounts,
@@ -111,7 +122,7 @@ func formatMessage(answer GraphAnswerType) MessageType {
 		messageData = append(messageData, data)
 	}
 
-	return MessageType {
+	return MessageType{
 		"LIQUIDITY_POOL_AMOUNTS",
 		messageData,
 	}

@@ -14,7 +14,9 @@
 			"enabled": false,
 			"token": "1",
 			"url": "localhost:8820"
-		}
+		},
+		"EnableProfiling":true,
+		"ProfilingPort":8873
 	},
 	"specific": {
 		"geth_server": "",

@@ -1,7 +1,9 @@
 {
     "HttpServer": {
         "Host": "0.0.0.0",
-        "Port": 8080
+        "Port": 8080,
+        "EnableProfiling":true,
+        "ProfilingPort":8875
     },
     "GlassNode": {
         "Url": "https://api.glassnode.com/v1/metrics/mining/",

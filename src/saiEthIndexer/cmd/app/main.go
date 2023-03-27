@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/gin"
 	"github.com/saiset-co/saiEthIndexer/internal/app"
 	"github.com/saiset-co/saiEthIndexer/tasks"
 )
@@ -32,6 +35,12 @@ func main() {
 	app.RegisterTask(t)
 
 	app.RegisterHandlers()
+
+	if app.Cfg.Common.EnableProfiling {
+		mr := gin.Default()
+		pprof.Register(mr)
+		go mr.Run(fmt.Sprintf(":%d", app.Cfg.Common.ProfilingPort))
+	}
 
 	app.Run()
 
