@@ -20,7 +20,7 @@
         "Token": "hv",
         "Url": "http://sai-web-socket:8820"
     },
-    "UsePermissionAuth":true,
+    "UsePermissionAuth":false,
     "SaiAuth": {
         "Host": "sai-auth",
         "Port": "8800"

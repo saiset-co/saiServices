@@ -27,6 +27,7 @@
 		"start_block": 0,
 		"operations": [],
 		"skipFailedTransactions": true,
+		"parseLogsForContracts": true,
 		"sleep":20,
 		"websocket": {
 			"token": "hv",

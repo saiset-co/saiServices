@@ -19,7 +19,7 @@
 	"specific": {
 		"geth_server": "",
 		"storage": {
-			"token": "",
+			"token": "0",
 			"url": "http://sai-storage:8801",
 			"email": "",
 			"password": ""
@@ -27,6 +27,7 @@
 		"start_block": 0,
 		"operations": [],
 		"skipFailedTransactions": true,
+		"parseLogsForContracts": true,
 		"sleep":20,
 		"websocket": {
 			"token": "hv",
