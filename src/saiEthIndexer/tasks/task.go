@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/adam-lavrik/go-imath/ix"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -29,6 +30,7 @@ type TaskManager struct {
 }
 
 var StopLoop bool
+var Contracts = map[string]string{}
 
 func NewManager(config *config.Configuration, logger *zap.Logger) (*TaskManager, error) {
 	ethClient, err := eth.GetClient(config.Specific.GethServer, logger)
@@ -45,6 +47,12 @@ func NewManager(config *config.Configuration, logger *zap.Logger) (*TaskManager,
 		BlockManager: blockManager,
 		resultChan:   make(chan error),
 	}, nil
+}
+
+func (t *TaskManager) ParseContracts() {
+	for _, v := range t.Config.EthContracts.Contracts {
+		Contracts[strings.ToLower(v.Address)] = v.ABI
+	}
 }
 
 // Process blocks, which got from geth-server
@@ -68,6 +76,7 @@ func (t *TaskManager) ProcessBlocks() {
 		t.Logger.Sugar().Debugf("get most recent block from storage : %d", blockID)
 
 		for i := blk.ID; i <= blockID; i++ {
+			t.ParseContracts()
 			blkInfo, err := t.EthClient.EthGetBlockByNumber(i, true)
 			if err != nil || blkInfo == nil {
 				blk.ID = i

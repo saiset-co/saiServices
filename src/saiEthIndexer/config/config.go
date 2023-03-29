@@ -22,6 +22,7 @@ type Specific struct {
 	Sleep                  int      `json:"sleep"`
 	WebSocket              `json:"websocket"`
 	SkipFailedTransactions bool `json:"skipFailedTransactions"`
+	ParseLogsForContracts  bool `json:"parseLogsForContracts"`
 }
 
 // settings for saiStorage
