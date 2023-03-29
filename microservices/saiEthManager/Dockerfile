@@ -9,3 +9,4 @@ RUN chmod +x sai-eth-manager
 CMD ./sai-eth-manager start
 
 EXPOSE 8819
+EXPOSE 8876

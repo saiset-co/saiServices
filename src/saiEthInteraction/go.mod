@@ -45,7 +45,6 @@ require (
 	github.com/ethereum/go-ethereum v1.10.26
 	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.9.0
-	github.com/kr/text v0.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/saiset-co/saiService v0.0.0-20221114154115-8e80f2c9a6a1
 	github.com/urfave/cli/v2 v2.11.1 // indirect

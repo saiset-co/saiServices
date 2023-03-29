@@ -51,7 +51,7 @@ type Configuration struct {
 
 func Load() Configuration {
 	var config Configuration
-	err := gonfig.GetConf("config.json", &config)
+	err := gonfig.GetConf("config/config.json", &config)
 
 	if err != nil {
 		log.Println("Configuration problem:", err)

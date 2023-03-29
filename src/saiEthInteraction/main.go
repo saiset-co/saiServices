@@ -24,7 +24,7 @@ func main() {
 	if svc.GetConfig("common.enable_profiling", true).(bool) {
 		mr := gin.Default()
 		pprof.Register(mr)
-		go mr.Run(fmt.Sprintf(":%d", svc.GetConfig("profiling_port", 8081).(int)))
+		go mr.Run(fmt.Sprintf(":%d", svc.GetConfig("common.profiling_port", 8081).(int)))
 	}
 
 	svc.Start()

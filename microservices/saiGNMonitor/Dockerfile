@@ -9,3 +9,4 @@ RUN chmod +x sai-gn-monitor
 CMD ./sai-gn-monitor start
 
 EXPOSE 8820
+EXPOSE 8876

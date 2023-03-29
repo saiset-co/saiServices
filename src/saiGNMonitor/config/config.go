@@ -25,7 +25,7 @@ type Configuration struct {
 var config Configuration
 
 func Load() {
-	configErr := gonfig.GetConf("config.json", &config)
+	configErr := gonfig.GetConf("config/config.json", &config)
 
 	if configErr != nil {
 		fmt.Println("Config load error: ", configErr)

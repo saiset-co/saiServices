@@ -15,5 +15,5 @@
     "Log": "",
     "Sleep": 300,
     "EnableProfiling":true,
-    "ProfilingPort":8876
+    "ProfilingPort":8877
 }

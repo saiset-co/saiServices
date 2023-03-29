@@ -26,6 +26,7 @@ services:
       - "8818:8018"
       - "8819:8019"
       - "8804:8804"
+      - "8874:8874"
     volumes:
       - ./saiEthInteraction/build/config.yml:/srv/config.yml
       - ./saiEthInteraction/build/contracts.json:/srv/contracts.json

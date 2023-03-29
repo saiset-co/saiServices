@@ -36,5 +36,5 @@
         "Port": "8800"
     },
     "EnableProfiling":true,
-    "ProfilingPort":8877
+    "ProfilingPort":8878
 }

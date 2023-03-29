@@ -12,3 +12,4 @@ CMD ./sai-eth-interaction start
 EXPOSE 8818
 EXPOSE 8804
 EXPOSE 8819
+EXPOSE 8874

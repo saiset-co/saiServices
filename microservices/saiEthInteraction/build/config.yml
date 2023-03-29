@@ -10,6 +10,7 @@ common:
     port: 8819
   log_mode: "debug"
   token: ""
+  interval: 5 ## interval for making api calls to transact transactions
 specific:
   eth_server: "https://rpc.ankr.com/polygon_mumbai"
   log_mode: "debug"
