@@ -118,7 +118,7 @@ func (bm *BlockManager) HandleReceipts(receipt *ethrpc.TransactionReceipt) ([]ma
 		_abi, err := bm.getABI(l.Address)
 
 		if err != nil {
-			bm.logger.Error("block manager - handle transaction events - getABI", zap.String("log address", l.Address), zap.Error(err))
+			bm.logger.Debug("block manager - handle transaction events - getABI", zap.String("log address", l.Address), zap.Error(err))
 			continue
 		}
 
@@ -172,10 +172,11 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 		methodName := "Unknown"
 		decodedInput := map[string]interface{}{}
 		status := false
+		rs := receipts[trs[j].Hash]
 
-		if len(receipts[trs[j].Hash].Status) > 2 {
-			status, _ = strconv.ParseBool(receipts[trs[j].Hash].Status[2:])
-		} else if len(receipts[trs[j].Hash].Root) > 2 {
+		if rs != nil && len(rs.Status) > 2 {
+			status, _ = strconv.ParseBool(rs.Status[2:])
+		} else if rs != nil && len(rs.Root) > 2 {
 			status = true
 		}
 
@@ -185,13 +186,17 @@ func (bm *BlockManager) HandleTransactions(trs []ethrpc.Transaction, receipts ma
 
 		_abi, abiErr := bm.getABI(trs[j].From, trs[j].To)
 		if abiErr != nil {
-			bm.logger.Error("block manager - handle transaction events - getABI", zap.String("transaction hash", trs[j].Hash), zap.Error(abiErr))
+			bm.logger.Debug("block manager - handle transaction events - getABI", zap.String("transaction hash", trs[j].Hash), zap.Error(abiErr))
 		}
+		var events []map[string]interface{}
 
-		events, trErr := bm.HandleReceipts(receipts[trs[j].Hash])
-		if trErr != nil {
-			bm.logger.Error("block manager - handle transaction events - HandleReceipts", zap.String("transaction hash", trs[j].Hash), zap.Error(trErr))
-			continue
+		if rs != nil {
+			var trErr error = nil
+			events, trErr = bm.HandleReceipts(rs)
+			if trErr != nil {
+				bm.logger.Error("block manager - handle transaction events - HandleReceipts", zap.String("transaction hash", trs[j].Hash), zap.Error(trErr))
+				continue
+			}
 		}
 
 		if (bm.config.ParseLogsForContracts == false && abiErr != nil) || (bm.config.ParseLogsForContracts == true && len(events) == 0) {

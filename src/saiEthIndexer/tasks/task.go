@@ -29,6 +29,17 @@ type TaskManager struct {
 	resultChan   chan error
 }
 
+type Receipts struct {
+	sync.RWMutex
+	list map[string]*ethrpc.TransactionReceipt
+}
+
+func (rs *Receipts) Add(i string, r *ethrpc.TransactionReceipt) {
+	rs.Lock()
+	defer rs.Unlock()
+	rs.list[i] = r
+}
+
 var StopLoop bool
 var Contracts = map[string]string{}
 
@@ -53,6 +64,38 @@ func (t *TaskManager) ParseContracts() {
 	for _, v := range t.Config.EthContracts.Contracts {
 		Contracts[strings.ToLower(v.Address)] = v.ABI
 	}
+}
+
+func (t *TaskManager) GetReceipt(tr ethrpc.Transaction) *ethrpc.TransactionReceipt {
+	receipt, err := t.EthClient.EthGetTransactionReceipt(tr.Hash)
+	if err != nil {
+		t.Logger.Error("tasks - ProcessBlocks - get transaction receipt from server", zap.Error(err))
+	}
+
+	return receipt
+}
+
+func (t *TaskManager) GetReceipts(trs []ethrpc.Transaction) map[string]*ethrpc.TransactionReceipt {
+	var wg sync.WaitGroup
+
+	receipts := &Receipts{
+		list: map[string]*ethrpc.TransactionReceipt{},
+	}
+
+	for _, tr := range trs {
+		wg.Add(1)
+		tr := tr
+
+		go func() {
+			defer wg.Done()
+			receipt := t.GetReceipt(tr)
+			receipts.Add(tr.Hash, receipt)
+		}()
+	}
+
+	wg.Wait()
+
+	return receipts.list
 }
 
 // Process blocks, which got from geth-server
@@ -93,18 +136,10 @@ func (t *TaskManager) ProcessBlocks() {
 			}
 
 			t.Logger.Sugar().Debugf("block %d from %d analyzed, %d total transactions", i, blockID, len(blkInfo.Transactions))
-			receipts := map[string]*ethrpc.TransactionReceipt{}
 
-			for _, tr := range blkInfo.Transactions {
-				receipt, err := t.EthClient.EthGetTransactionReceipt(tr.Hash)
-
-				if err != nil {
-					t.Logger.Error("tasks - ProcessBlocks - get transaction receipt from server", zap.Error(err))
-					continue
-				}
-
-				receipts[tr.Hash] = receipt
-			}
+			start := time.Now()
+			receipts := t.GetReceipts(blkInfo.Transactions)
+			t.Logger.Sugar().Debugf("GetReceipts takes about %v\n", time.Now().Sub(start))
 
 			t.BlockManager.HandleTransactions(blkInfo.Transactions, receipts)
 
