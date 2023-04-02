@@ -58,7 +58,8 @@ shc:
 test:
 	make build-test
 	make --ignore-errors integration-test-all
-	make integration-test-down-quiet
+	@make integration-test-down-quiet
+	@echo "OK"
 
 build-test:
 	make service
