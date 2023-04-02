@@ -1,6 +1,9 @@
 # saiServices
 #### profiling
  <host:port/debug/pprof>
+ 
+#### Tests
+make test
 
 ## saiEthInteraction
 
