@@ -649,7 +649,7 @@ func (am Manager) Password(r map[string]interface{}, t string) interface{} {
 		wrappedResult map[string]interface{}
 		users         []map[string]interface{}
 	)
-	
+
 	err, result := am.Database.Get("users", bson.M{"internal_id": r["internal_id"]}, bson.M{}, am.Config.Token)
 
 	if err != nil {
