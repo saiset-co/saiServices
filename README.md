@@ -1,10 +1,4 @@
 # saiServices
-#### profiling
- <host:port/debug/pprof>
- 
-#### Tests
-make test
-
 ## saiEthInteraction
 
 ### Config
@@ -93,3 +87,16 @@ curl --location --request GET 'http://localhost:8804' \
 &emsp;    - response 
 
 - response: 'true'
+
+#### profiling
+ <host:port/debug/pprof>
+ 
+## profiling
+ <host:port/debug/pprof> for every service
+ 
+## Tests
+### Integration test
+`make integration-test`
+
+### Load test
+`make load-test`
