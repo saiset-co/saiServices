@@ -14,16 +14,16 @@ service:
 	cd ./src/saiStorage && go mod tidy && go build -o ../../microservices/saiStorage/build/sai-storage
 	cd ./src/saiAuth && go mod tidy && go build -o ../../microservices/saiAuth/build/sai-auth
 	# cd ./src/saiContractExplorer && go mod tidy && go build -o ../../microservices/saiContractExplorer/build/sai-contract-explorer
-	cd ./src/saiEthIndexer/cmd/app && go mod tidy && go build -o ../../../../microservices/saiEthIndexer/build/sai-eth-indexer
-	cd ./src/saiEthInteraction && go mod tidy && go build -o ../../microservices/saiEthInteraction/build/sai-eth-interaction
+	# cd ./src/saiEthIndexer/cmd/app && go mod tidy && go build -o ../../../../microservices/saiEthIndexer/build/sai-eth-indexer
+	# cd ./src/saiEthInteraction && go mod tidy && go build -o ../../microservices/saiEthInteraction/build/sai-eth-interaction
 	# cp ./src/saiEthManager/config/config.json ./microservices/saiEthManager/build/config.json
 	# cp ./src/saiGNMonitor/config/config.json ./microservices/saiGNMonitor/build/config.json
 	cp ./src/saiStorage/config.json ./microservices/saiStorage/build/config.json
 	cp ./src/saiAuth/config.json ./microservices/saiAuth/build/config.json
 	# cp ./src/saiContractExplorer/config/config.json ./microservices/saiContractExplorer/build/config.json
-	cp ./src/saiEthIndexer/config/config.json ./microservices/saiEthIndexer/build/config/config.json
-	cp ./src/saiEthInteraction/config.yml ./microservices/saiEthInteraction/build/config.yml
-	cp ./src/saiEthInteraction/contracts.json ./microservices/saiEthInteraction/build/contracts.json
+	# cp ./src/saiEthIndexer/config/config.json ./microservices/saiEthIndexer/build/config/config.json
+	# cp ./src/saiEthInteraction/config.yml ./microservices/saiEthInteraction/build/config.yml
+	# cp ./src/saiEthInteraction/contracts.json ./microservices/saiEthInteraction/build/contracts.json
 
 docker:
 	docker-compose -f ./microservices/docker-compose.yml up -d --build
@@ -54,12 +54,11 @@ shc:
 
 
 ## integration tests
-
-test:
+integration-test:
 	make build-test
 	make --ignore-errors integration-test-all
 	@make integration-test-down-quiet
-	@echo "OK"
+	@echo -e "\033[0;34mIntegration tests done"
 
 build-test:
 	make service
@@ -79,3 +78,11 @@ integration-test-down-quiet:
 	
 integration-test-all:
 	cd ./src/saiAuth && go clean -testcache && go test -v ./integration-test/
+
+
+## load tests
+load-test:
+	make build-test
+	cd ./src/vegetaTool && go run .
+	@make integration-test-down-quiet
+	@echo "\033[0;34mLoad tests done"
