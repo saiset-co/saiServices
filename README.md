@@ -88,11 +88,10 @@ curl --location --request GET 'http://localhost:8804' \
 
 - response: 'true'
 
-#### profiling
- <host:port/debug/pprof>
+
  
-## profiling
- <host:port/debug/pprof> for every service
+## Profiling
+ `host:port/debug/pprof` for every service
  
 ## Tests
 ### Integration test
