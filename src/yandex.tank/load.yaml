@@ -1,0 +1,28 @@
+overload:
+  enabled: true
+  package: yandextank.plugins.DataUploader
+  token_file: "token.txt"
+phantom:
+  ## connection_test: false
+  address: localhost:8800
+  header_http: "1.1"
+  headers:
+    - "[Host: localhost:8800]"
+    - "[Connection: close]"
+    - "[Token: 12345]"
+    - "[Content-Type: application/json]"
+  ammofile: "ammo.txt"
+  ammo_type: phantom
+  # uris:
+  #   - /register
+  load_profile:
+    load_type: rps
+    schedule: line(5, 100, 1m)
+  ssl: false
+autostop:
+  autostop:
+    - http(5xx,10%,5s)
+console:
+  enabled: true
+telegraf:
+  enabled: false

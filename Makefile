@@ -86,3 +86,16 @@ load-test:
 	cd ./src/vegetaTool && go run .
 	@make integration-test-down-quiet
 	@echo "\033[0;34mLoad tests done"
+
+## install vegeta
+	wget https://github.com/tsenart/vegeta/releases/download/v12.8.4/vegeta_12.8.4_linux_386.tar.gz && tar -xvf vegeta_12.8.4_linux_386.tar.gz
+
+
+
+## prepare requests for yandex-tank
+yandex-tank-make-ammo:
+	echo "POST||/register||||{\"key\":\"1\",\"password\":\"123456\"}"| ./make_ammo.py > ammo.txt
+
+## run yandex-tank
+yandex-tank-run:
+	cd src/ && docker run --net host --rm -v ./yandex.tank:/var/loadtest -it yandex/yandex-tank -c load.yaml ammo.txt

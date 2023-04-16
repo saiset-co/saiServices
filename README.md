@@ -91,7 +91,7 @@ curl --location --request GET 'http://localhost:8804' \
 
  
 ## Profiling
- `host:port/debug/pprof` for every service
+ host:port/debug/pprof for every service
  
 ## Tests
 ### Integration test
@@ -99,3 +99,11 @@ curl --location --request GET 'http://localhost:8804' \
 
 ### Load test
 `make load-test`
+
+## Load tests
+1. https://overload.yandex.net/ - login - get api token - paste to src/yandex.tank/token.txt
+2. src/yandex.tank/load.yaml - config file
+3. make yandex-tank-make-ammo to prepare requests
+4. src/yandex.tank/make_ammo.py to generate requests
+5. `make yandex-tank-run` to run load tests
+6. Watch output after tests, find something like `Web link: https://overload.yandex.net/594646` to show results.
