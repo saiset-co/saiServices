@@ -1,0 +1,40 @@
+exit_code: 1
+left_time: null
+lunapark_id: null
+lunapark_url: null
+status_code: FINISHED
+tank_msg: "Exception occurred:\n<class 'KeyboardInterrupt'>: \n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/core/tankworker.py\"\
+  , line 72, in run\n    self.core.plugins_prepare_test()\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/core/tankcore.py\"\
+  , line 273, in plugins_prepare_test\n    plugin.prepare_test()\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py\"\
+  , line 302, in prepare_test\n    lp_job = self.lp_job\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py\"\
+  , line 620, in lp_job\n    self._lp_job = self.__get_lp_job()\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py\"\
+  , line 673, in __get_lp_job\n    lp_job.send_config(LPRequisites.CONFIGINITIAL,\
+  \ yaml.dump(self.core.configinitial))\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py\"\
+  , line 893, in send_config\n    self.api_client.send_config(self.number, lp_requisites,\
+  \ content, trace=self.log_other_requests)\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py\"\
+  , line 851, in number\n    self.create()\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py\"\
+  , line 867, in create\n    self._number, self._token = self.api_client.new_job(task=self.task,\n\
+  \n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py\"\
+  , line 363, in new_job\n    response = self.__post(\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py\"\
+  , line 304, in __post\n    return self.__make_api_request(\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py\"\
+  , line 215, in __make_api_request\n    response = self.__send_single_request(request,\
+  \ next(ids), trace=trace)\n\n  File \"/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py\"\
+  , line 153, in __send_single_request\n    resp = self.session.send(p, timeout=self.connection_timeout)\n\
+  \n  File \"/usr/lib/python3/dist-packages/requests/sessions.py\", line 646, in send\n\
+  \    r = adapter.send(request, **kwargs)\n\n  File \"/usr/lib/python3/dist-packages/requests/adapters.py\"\
+  , line 439, in send\n    resp = conn.urlopen(\n\n  File \"/usr/lib/python3/dist-packages/urllib3/connectionpool.py\"\
+  , line 665, in urlopen\n    httplib_response = self._make_request(\n\n  File \"\
+  /usr/lib/python3/dist-packages/urllib3/connectionpool.py\", line 376, in _make_request\n\
+  \    self._validate_conn(conn)\n\n  File \"/usr/lib/python3/dist-packages/urllib3/connectionpool.py\"\
+  , line 996, in _validate_conn\n    conn.connect()\n\n  File \"/usr/lib/python3/dist-packages/urllib3/connection.py\"\
+  , line 366, in connect\n    self.sock = ssl_wrap_socket(\n\n  File \"/usr/lib/python3/dist-packages/urllib3/util/ssl_.py\"\
+  , line 370, in ssl_wrap_socket\n    return context.wrap_socket(sock, server_hostname=server_hostname)\n\
+  \n  File \"/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py\", line 487,\
+  \ in wrap_socket\n    if not util.wait_for_read(sock, sock.gettimeout()):\n\n  File\
+  \ \"/usr/lib/python3/dist-packages/urllib3/util/wait.py\", line 146, in wait_for_read\n\
+  \    return wait_for_socket(sock, read=True, timeout=timeout)\n\n  File \"/usr/lib/python3/dist-packages/urllib3/util/wait.py\"\
+  , line 107, in poll_wait_for_socket\n    return bool(_retry_on_intr(do_poll, timeout))\n\
+  \n  File \"/usr/lib/python3/dist-packages/urllib3/util/wait.py\", line 43, in _retry_on_intr\n\
+  \    return fn(timeout)\n\n  File \"/usr/lib/python3/dist-packages/urllib3/util/wait.py\"\
+  , line 105, in do_poll\n    return poll_obj.poll(t)\n"
+test_id: 2023-04-22_16-31-07.824150

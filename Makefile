@@ -96,6 +96,16 @@ load-test:
 yandex-tank-make-ammo:
 	echo "POST||/register||||{\"key\":\"1\",\"password\":\"123456\"}"| ./make_ammo.py > ammo.txt
 
-## run yandex-tank
-yandex-tank-run:
+## run yandex-tank to test sai_auth
+yandex-tank-run-sai_auth:
+	cd src/yandex.tank/scripts && chmod +x test_sai_auth.sh && ./test_sai_auth.sh
+	make integration-test-up
 	cd src/ && docker run --net host --rm -v ./yandex.tank:/var/loadtest -it yandex/yandex-tank -c load.yaml ammo.txt
+	make integration-test-down
+
+## run yandex-tank to test sai_storage
+yandex-tank-run-sai_storage:
+	cd src/yandex.tank/scripts && chmod +x test_sai_storage.sh && ./test_sai_storage.sh
+	make integration-test-up
+	cd src/ && docker run --net host --rm -v ./yandex.tank:/var/loadtest -it yandex/yandex-tank -c load.yaml ammo.txt
+	make integration-test-down

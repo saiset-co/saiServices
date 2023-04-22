@@ -17,7 +17,7 @@ phantom:
   #   - /register
   load_profile:
     load_type: rps
-    schedule: line(5, 100, 1m)
+    schedule: line(1, 20000, 1m)
   ssl: false
 autostop:
   autostop:
