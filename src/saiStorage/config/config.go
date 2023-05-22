@@ -44,6 +44,8 @@ type Configuration struct {
 		Host string
 		Port string
 	}
+	EnableProfiling bool
+	ProfilingPort   int64
 }
 
 func Load() Configuration {

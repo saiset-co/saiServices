@@ -13,5 +13,7 @@
     },
     "Graph": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2",
     "Log": "",
-    "Sleep": 300
+    "Sleep": 300,
+    "EnableProfiling":true,
+    "ProfilingPort":8877
 }

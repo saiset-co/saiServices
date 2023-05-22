@@ -24,5 +24,7 @@
     "Geth": [
         "http://geth-dev.sator.io:8545"
     ],
-    "Sleep": 20
+    "Sleep": 20,
+    "EnableProfiling":true,
+    "ProfilingPort":8875
 }

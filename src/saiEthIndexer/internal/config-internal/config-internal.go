@@ -2,9 +2,11 @@ package configinternal
 
 // Common - common settings for microservice (server options, socket port and etc)
 type Common struct {
-	HttpServer   `json:"http_server"`
-	SocketServer `json:"socket_server"`
-	WebSocket    `json:"web_socket"`
+	HttpServer      `json:"http_server"`
+	SocketServer    `json:"socket_server"`
+	WebSocket       `json:"web_socket"`
+	EnableProfiling bool  `json:"EnableProfiling"`
+	ProfilingPort   int64 `json:"ProfilingPort"`
 }
 
 type WebSocket struct {

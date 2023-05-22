@@ -57,6 +57,8 @@ type Configuration struct {
 	AccessTokenExp  int64
 	RefreshTokenExp int64
 	DefaultRole     string
+	EnableProfiling bool
+	ProfilingPort   int64
 }
 
 func Load() Configuration {

@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/tkanos/gonfig"
 )
 
@@ -15,8 +16,8 @@ type Configuration struct {
 	}
 	Storage struct {
 		Token string
-		Url  string
-		Auth struct {
+		Url   string
+		Auth  struct {
 			Email    string
 			Password string
 		}
@@ -24,15 +25,17 @@ type Configuration struct {
 	Operations []string
 	StartBlock int
 	WebSocket  struct {
-		Token 	string
-		Url 	string
+		Token string
+		Url   string
 	}
 	Contract struct {
 		Address string
-		ABI string
+		ABI     string
 	}
-	Geth     []string
-	Sleep    int
+	Geth            []string
+	Sleep           int
+	EnableProfiling bool
+	ProfilingPort   int64
 }
 
 func Load() Configuration {

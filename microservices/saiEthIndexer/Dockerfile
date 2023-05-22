@@ -10,3 +10,4 @@ CMD ./sai-eth-indexer --debug
 
 
 EXPOSE 8817
+EXPOSE 8873

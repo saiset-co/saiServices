@@ -9,3 +9,4 @@ RUN chmod +x sai-gas-explorer
 CMD ./sai-gas-explorer
 
 EXPOSE 8821
+EXPOSE 8875

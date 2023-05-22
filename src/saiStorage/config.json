@@ -34,5 +34,7 @@
     "SaiAuth": {
         "Host": "sai-auth",
         "Port": "8800"
-    }
+    },
+    "EnableProfiling":true,
+    "ProfilingPort":8878
 }

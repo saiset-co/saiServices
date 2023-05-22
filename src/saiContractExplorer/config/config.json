@@ -15,7 +15,7 @@
         {
             "Data": {
                 "Address": "",
-                "Abi": "",
+                "Abi": ""
             },
             "Operations": [""]
         }
@@ -35,5 +35,7 @@
             "Addresses": [""]
         }
     },
-    "Sleep": 20
+    "Sleep": 20,
+    "EnableProfiling":true,
+    "ProfilingPort":8872
 }

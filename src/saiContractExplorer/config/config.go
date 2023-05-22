@@ -44,12 +44,14 @@ type Configuration struct {
 			Addresses []string
 		}
 	}
-	Sleep int
+	Sleep           int
+	EnableProfiling bool
+	ProfilingPort   int64
 }
 
 func Load() Configuration {
 	var config Configuration
-	err := gonfig.GetConf("config.json", &config)
+	err := gonfig.GetConf("config/config.json", &config)
 
 	if err != nil {
 		log.Println("Configuration problem:", err)

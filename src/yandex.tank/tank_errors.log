@@ -1,0 +1,172 @@
+2023-04-19 18:43:50,845	Exception occurred:
+<class 'RuntimeError'>: All connection attempts failed for localhost, use {phantom.connection_test: false} to disable it
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankworker.py", line 70, in run
+    self.core.plugins_configure()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankcore.py", line 262, in plugins_configure
+    plugin.configure()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/plugin.py", line 67, in configure
+    self.phantom_config = self.phantom.config_file
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/plugin.py", line 76, in phantom
+    self._phantom.read_config()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/utils.py", line 95, in read_config
+    stream.read_config()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/utils.py", line 274, in read_config
+    self.ipv6, self.resolved_ip, self.port, self.address = self.address_wizard.resolve(
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/common/util.py", line 587, in resolve
+    raise RuntimeError(msg % address_str)
+
+2023-04-21 18:35:49,845	Exception occurred:
+<class 'RuntimeError'>: All connection attempts failed for localhost, use {phantom.connection_test: false} to disable it
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankworker.py", line 70, in run
+    self.core.plugins_configure()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankcore.py", line 262, in plugins_configure
+    plugin.configure()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/plugin.py", line 67, in configure
+    self.phantom_config = self.phantom.config_file
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/plugin.py", line 76, in phantom
+    self._phantom.read_config()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/utils.py", line 95, in read_config
+    stream.read_config()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Phantom/utils.py", line 274, in read_config
+    self.ipv6, self.resolved_ip, self.port, self.address = self.address_wizard.resolve(
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/common/util.py", line 587, in resolve
+    raise RuntimeError(msg % address_str)
+
+2023-04-21 19:18:15,250	Interrupting
+2023-04-21 19:18:15,254	Test interrupted:
+<class 'KeyboardInterrupt'>: 
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankworker.py", line 79, in run
+    self.retcode = self.core.wait_for_finish()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankcore.py", line 308, in wait_for_finish
+    retcode = plugin.is_test_finished()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/plugin.py", line 87, in is_test_finished
+    self.__console_view = self.screen.render_screen().encode('utf-8')
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/screen.py", line 416, in render_screen
+    left_lines = self.__render_left_panel()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/screen.py", line 369, in __render_left_panel
+    left_block.render()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/screen.py", line 559, in render
+    self.top.render(expected_width=expected_width)
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/screen.py", line 560, in render
+    self.bottom.render(expected_width=expected_width)
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/screen.py", line 526, in render
+    self.left.render(expected_width=expected_width)
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/screen.py", line 695, in render
+    data = self.__calc_percentiles()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/Console/screen.py", line 675, in __calc_percentiles
+    last_1m = last_1m.add(data, fill_value=0)
+
+  File "/usr/local/lib/python3.8/dist-packages/pandas/core/ops/__init__.py", line 165, in flex_wrapper
+    return self._binop(other, op, level=level, fill_value=fill_value)
+
+  File "/usr/local/lib/python3.8/dist-packages/pandas/core/series.py", line 2728, in _binop
+    result = func(this_vals, other_vals)
+
+  File "/usr/local/lib/python3.8/dist-packages/numpy/core/_ufunc_config.py", line 440, in __exit__
+    if self.call is not _Unspecified:
+
+2023-04-21 19:44:57,640	Interrupting
+2023-04-21 19:44:57,640	Test interrupted:
+<class 'KeyboardInterrupt'>: 
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankworker.py", line 79, in run
+    self.retcode = self.core.wait_for_finish()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankcore.py", line 326, in wait_for_finish
+    time.sleep(0.5 - diff)
+
+2023-04-22 16:31:10,244	Interrupting
+2023-04-22 16:31:10,251	Exception occurred:
+<class 'KeyboardInterrupt'>: 
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankworker.py", line 72, in run
+    self.core.plugins_prepare_test()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/core/tankcore.py", line 273, in plugins_prepare_test
+    plugin.prepare_test()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py", line 302, in prepare_test
+    lp_job = self.lp_job
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py", line 620, in lp_job
+    self._lp_job = self.__get_lp_job()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py", line 673, in __get_lp_job
+    lp_job.send_config(LPRequisites.CONFIGINITIAL, yaml.dump(self.core.configinitial))
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py", line 893, in send_config
+    self.api_client.send_config(self.number, lp_requisites, content, trace=self.log_other_requests)
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py", line 851, in number
+    self.create()
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/plugin.py", line 867, in create
+    self._number, self._token = self.api_client.new_job(task=self.task,
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py", line 363, in new_job
+    response = self.__post(
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py", line 304, in __post
+    return self.__make_api_request(
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py", line 215, in __make_api_request
+    response = self.__send_single_request(request, next(ids), trace=trace)
+
+  File "/usr/local/lib/python3.8/dist-packages/yandextank/plugins/DataUploader/client.py", line 153, in __send_single_request
+    resp = self.session.send(p, timeout=self.connection_timeout)
+
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 439, in send
+    resp = conn.urlopen(
+
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 665, in urlopen
+    httplib_response = self._make_request(
+
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 376, in _make_request
+    self._validate_conn(conn)
+
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 996, in _validate_conn
+    conn.connect()
+
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 366, in connect
+    self.sock = ssl_wrap_socket(
+
+  File "/usr/lib/python3/dist-packages/urllib3/util/ssl_.py", line 370, in ssl_wrap_socket
+    return context.wrap_socket(sock, server_hostname=server_hostname)
+
+  File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 487, in wrap_socket
+    if not util.wait_for_read(sock, sock.gettimeout()):
+
+  File "/usr/lib/python3/dist-packages/urllib3/util/wait.py", line 146, in wait_for_read
+    return wait_for_socket(sock, read=True, timeout=timeout)
+
+  File "/usr/lib/python3/dist-packages/urllib3/util/wait.py", line 107, in poll_wait_for_socket
+    return bool(_retry_on_intr(do_poll, timeout))
+
+  File "/usr/lib/python3/dist-packages/urllib3/util/wait.py", line 43, in _retry_on_intr
+    return fn(timeout)
+
+  File "/usr/lib/python3/dist-packages/urllib3/util/wait.py", line 105, in do_poll
+    return poll_obj.poll(t)
+

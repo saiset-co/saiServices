@@ -9,3 +9,4 @@ RUN chmod +x sai-graphql
 CMD ./sai-graphql
 
 EXPOSE 8812
+EXPOSE 8877

@@ -1,6 +1,10 @@
 package main
 
 import (
+	"fmt"
+
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/gin"
 	"github.com/webmakom-com/saiContractExplorer/config"
 	"github.com/webmakom-com/saiContractExplorer/explorer"
 	"github.com/webmakom-com/saiContractExplorer/server"
@@ -19,6 +23,12 @@ func main() {
 
 	if cfg.Geth.Web.Enabled {
 		go exp.WProcess()
+	}
+
+	if cfg.EnableProfiling {
+		mr := gin.Default()
+		pprof.Register(mr)
+		go mr.Run(fmt.Sprintf(":%d", cfg.ProfilingPort))
 	}
 
 	srv.Start()

@@ -8,9 +8,11 @@ import (
 
 type Configuration struct {
 	HttpServer struct {
-		Host  string
-		Port  int
-		Token string
+		Host            string
+		Port            int
+		Token           string
+		EnableProfiling bool
+		ProfilingPort   int64
 	}
 	Contract struct {
 		Server   string
@@ -24,7 +26,7 @@ type Configuration struct {
 var config Configuration
 
 func Load() {
-	configErr := gonfig.GetConf("config.json", &config)
+	configErr := gonfig.GetConf("config/config.json", &config)
 
 	if configErr != nil {
 		fmt.Println("Config load error: ", configErr)

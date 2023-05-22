@@ -9,3 +9,4 @@ RUN chmod +x sai-contract-explorer
 CMD ./sai-contract-explorer
 
 EXPOSE 8817
+EXPOSE 8872

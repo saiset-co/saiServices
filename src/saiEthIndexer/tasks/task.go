@@ -70,12 +70,15 @@ func (t *TaskManager) ProcessBlocks() {
 		for i := blk.ID; i <= blockID; i++ {
 			blkInfo, err := t.EthClient.EthGetBlockByNumber(i, true)
 			if err != nil || blkInfo == nil {
+				blk.ID = i
+				t.BlockManager.SetLastBlock(blk)
 				t.Logger.Error("tasks - ProcessBlocks - get block by number from server", zap.Error(err))
-				i--
 				continue
 			}
 
 			if len(blkInfo.Transactions) == 0 {
+				blk.ID = i
+				t.BlockManager.SetLastBlock(blk)
 				t.Logger.Info("tasks - ProcessBlocks - get block by number from server - transactions - no transactions found", zap.Int("current block id in for cycle", i), zap.Int("current block id from eth server", blockID))
 				continue
 			}
@@ -86,9 +89,8 @@ func (t *TaskManager) ProcessBlocks() {
 			for _, tr := range blkInfo.Transactions {
 				receipt, err := t.EthClient.EthGetTransactionReceipt(tr.Hash)
 
-				if err != nil || blkInfo == nil {
+				if err != nil {
 					t.Logger.Error("tasks - ProcessBlocks - get transaction receipt from server", zap.Error(err))
-					i--
 					continue
 				}
 
